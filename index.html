@@ -3,23 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Asymmetry Scanner | Find High R/R Trading Setups</title>
-  <meta name="description" content="AI-powered scanner finds asymmetric trading opportunities with 2:1+ risk/reward ratios. Real-time alerts via Telegram.">
+  <title>Asymmetric Alpha | Find the Edge Before the Crowd</title>
+  <meta name="description" content="AI-powered scanner finds asymmetric trading setups with 2:1+ risk/reward. Real-time Telegram alerts. Join traders who stack the odds.">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <style>
     :root {
-      --bg: #0a0a0f;
-      --surface: #12121a;
-      --border: #1f1f2e;
-      --text: #e4e4eb;
-      --text-muted: #8b8b9e;
+      --bg: #09090b;
+      --surface: #18181b;
+      --surface-2: #27272a;
+      --border: #3f3f46;
+      --text: #fafafa;
+      --text-muted: #a1a1aa;
       --accent: #22c55e;
-      --accent-dim: #16a34a;
+      --accent-hover: #16a34a;
+      --accent-dim: rgba(34, 197, 94, 0.1);
       --red: #ef4444;
-      --blue: #3b82f6;
+      --yellow: #eab308;
     }
     
     * {
@@ -33,10 +35,11 @@
       background: var(--bg);
       color: var(--text);
       line-height: 1.6;
+      overflow-x: hidden;
     }
     
     .container {
-      max-width: 1000px;
+      max-width: 1100px;
       margin: 0 auto;
       padding: 0 24px;
     }
@@ -44,60 +47,121 @@
     /* Header */
     header {
       padding: 20px 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(9, 9, 11, 0.8);
+      backdrop-filter: blur(12px);
+      z-index: 100;
       border-bottom: 1px solid var(--border);
+    }
+    
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
     
     .logo {
       font-size: 20px;
-      font-weight: 700;
+      font-weight: 800;
       color: var(--text);
+      letter-spacing: -0.5px;
     }
     
     .logo span {
       color: var(--accent);
     }
     
+    .header-cta {
+      background: var(--accent);
+      color: #000;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+    
+    .header-cta:hover {
+      background: var(--accent-hover);
+    }
+    
     /* Hero */
     .hero {
-      padding: 80px 0 60px;
+      padding: 140px 0 80px;
       text-align: center;
+      position: relative;
+    }
+    
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(34, 197, 94, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    
+    .badge {
+      display: inline-block;
+      background: var(--accent-dim);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(34, 197, 94, 0.3);
     }
     
     .hero h1 {
-      font-size: 48px;
-      font-weight: 700;
+      font-size: 56px;
+      font-weight: 800;
       margin-bottom: 20px;
-      line-height: 1.2;
+      line-height: 1.1;
+      letter-spacing: -2px;
     }
     
-    .hero h1 span {
-      color: var(--accent);
+    .hero h1 .gradient {
+      background: linear-gradient(135deg, var(--accent) 0%, #86efac 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
     
     .hero p {
       font-size: 20px;
       color: var(--text-muted);
-      max-width: 600px;
+      max-width: 540px;
       margin: 0 auto 40px;
     }
     
-    .cta-btn {
-      display: inline-block;
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
       background: var(--accent);
       color: #000;
-      font-weight: 600;
-      padding: 16px 40px;
+      font-weight: 700;
+      padding: 16px 32px;
       border-radius: 8px;
       text-decoration: none;
-      font-size: 18px;
-      transition: background 0.2s;
+      font-size: 16px;
+      transition: all 0.2s;
     }
     
-    .cta-btn:hover {
-      background: var(--accent-dim);
+    .hero-cta:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
     }
     
-    .cta-note {
+    .hero-note {
       margin-top: 16px;
       font-size: 14px;
       color: var(--text-muted);
@@ -107,22 +171,23 @@
     .stats {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-      padding: 60px 0;
+      gap: 16px;
+      padding: 40px 0 80px;
     }
     
     .stat-card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 24px;
+      padding: 28px;
       text-align: center;
     }
     
     .stat-value {
-      font-size: 36px;
-      font-weight: 700;
+      font-size: 42px;
+      font-weight: 800;
       color: var(--accent);
+      letter-spacing: -1px;
     }
     
     .stat-value.red {
@@ -133,17 +198,83 @@
       font-size: 14px;
       color: var(--text-muted);
       margin-top: 8px;
+      font-weight: 500;
+    }
+    
+    /* How it works */
+    .how-it-works {
+      padding: 80px 0;
+    }
+    
+    .section-label {
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 16px;
+    }
+    
+    .section-title {
+      text-align: center;
+      font-size: 40px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 60px;
+    }
+    
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+    
+    .step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px 32px;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+    
+    .step:hover {
+      border-color: var(--accent);
+    }
+    
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      background: var(--accent);
+      color: #000;
+      font-weight: 800;
+      font-size: 20px;
+      border-radius: 50%;
+      margin-bottom: 24px;
+    }
+    
+    .step h3 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    
+    .step p {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.7;
     }
     
     /* Features */
     .features {
-      padding: 60px 0;
-    }
-    
-    .features h2 {
-      font-size: 32px;
-      text-align: center;
-      margin-bottom: 40px;
+      padding: 80px 0;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
     }
     
     .feature-grid {
@@ -153,227 +284,287 @@
     }
     
     .feature-card {
-      background: var(--surface);
+      background: var(--bg);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 32px;
+      border-radius: 16px;
+      padding: 36px;
     }
     
     .feature-icon {
-      font-size: 32px;
-      margin-bottom: 16px;
+      font-size: 36px;
+      margin-bottom: 20px;
     }
     
     .feature-card h3 {
-      font-size: 18px;
+      font-size: 20px;
+      font-weight: 700;
       margin-bottom: 12px;
     }
     
     .feature-card p {
-      font-size: 14px;
+      font-size: 15px;
       color: var(--text-muted);
+      line-height: 1.7;
     }
     
-    /* How it works */
-    .how-it-works {
-      padding: 60px 0;
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      margin: 40px 0;
+    /* Sample alert */
+    .sample-section {
+      padding: 80px 0;
     }
     
-    .how-it-works h2 {
-      text-align: center;
-      font-size: 32px;
-      margin-bottom: 40px;
-    }
-    
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 40px;
-      max-width: 900px;
+    .sample-alert {
+      max-width: 500px;
       margin: 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      font-family: monospace;
+      font-size: 14px;
+      line-height: 1.8;
     }
     
-    .step {
-      text-align: center;
-    }
-    
-    .step-num {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 40px;
-      height: 40px;
-      background: var(--accent);
-      color: #000;
-      font-weight: 700;
-      border-radius: 50%;
+    .sample-alert .header {
+      color: var(--accent);
+      font-weight: bold;
+      font-size: 16px;
       margin-bottom: 16px;
     }
     
-    .step h3 {
+    .sample-alert .symbol {
       font-size: 18px;
-      margin-bottom: 8px;
+      font-weight: bold;
+      color: var(--text);
     }
     
-    .step p {
-      font-size: 14px;
+    .sample-alert .muted {
       color: var(--text-muted);
     }
     
-    /* Recent wins */
-    .recent-wins {
-      padding: 60px 0;
-    }
-    
-    .recent-wins h2 {
-      text-align: center;
-      font-size: 32px;
-      margin-bottom: 40px;
-    }
-    
-    .wins-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 16px;
-    }
-    
-    .win-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 20px;
-      text-align: center;
-    }
-    
-    .win-symbol {
-      font-weight: 700;
-      font-size: 18px;
-    }
-    
-    .win-pnl {
+    .sample-alert .green {
       color: var(--accent);
-      font-weight: 600;
-      font-size: 24px;
-      margin: 8px 0;
     }
     
-    .win-date {
-      font-size: 12px;
-      color: var(--text-muted);
+    .sample-alert .levels {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
     }
     
     /* Pricing */
     .pricing {
-      padding: 60px 0;
-    }
-    
-    .pricing h2 {
-      text-align: center;
-      font-size: 32px;
-      margin-bottom: 40px;
+      padding: 80px 0;
     }
     
     .pricing-card {
-      max-width: 400px;
+      max-width: 440px;
       margin: 0 auto;
       background: var(--surface);
       border: 2px solid var(--accent);
-      border-radius: 16px;
-      padding: 40px;
+      border-radius: 20px;
+      padding: 48px;
       text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .pricing-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), #86efac);
+    }
+    
+    .pricing-popular {
+      position: absolute;
+      top: 20px;
+      right: -32px;
+      background: var(--accent);
+      color: #000;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 40px;
+      transform: rotate(45deg);
     }
     
     .pricing-name {
-      font-size: 24px;
-      font-weight: 600;
+      font-size: 28px;
+      font-weight: 800;
       margin-bottom: 8px;
     }
     
+    .pricing-desc {
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+    
     .pricing-price {
-      font-size: 48px;
-      font-weight: 700;
+      font-size: 64px;
+      font-weight: 800;
+      letter-spacing: -2px;
     }
     
     .pricing-price span {
-      font-size: 18px;
+      font-size: 20px;
+      font-weight: 500;
       color: var(--text-muted);
     }
     
     .pricing-features {
       list-style: none;
-      margin: 32px 0;
+      margin: 40px 0;
       text-align: left;
     }
     
     .pricing-features li {
-      padding: 12px 0;
+      padding: 14px 0;
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
+      font-size: 15px;
     }
     
     .pricing-features li::before {
       content: "✓";
       color: var(--accent);
       font-weight: 700;
+      font-size: 16px;
+    }
+    
+    .pricing-cta {
+      display: block;
+      width: 100%;
+      background: var(--accent);
+      color: #000;
+      font-weight: 700;
+      padding: 18px 32px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 16px;
+      transition: all 0.2s;
+    }
+    
+    .pricing-cta:hover {
+      background: var(--accent-hover);
+    }
+    
+    /* FAQ */
+    .faq {
+      padding: 80px 0;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+    }
+    
+    .faq-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    .faq-item h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    
+    .faq-item p {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.7;
     }
     
     /* Footer */
     footer {
-      padding: 40px 0;
+      padding: 48px 0;
       border-top: 1px solid var(--border);
       text-align: center;
+    }
+    
+    .footer-logo {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+    
+    .footer-logo span {
+      color: var(--accent);
+    }
+    
+    footer p {
       color: var(--text-muted);
       font-size: 14px;
     }
     
     footer a {
-      color: var(--accent);
+      color: var(--text-muted);
       text-decoration: none;
+    }
+    
+    footer a:hover {
+      color: var(--accent);
+    }
+    
+    .disclaimer {
+      margin-top: 32px;
+      font-size: 12px;
+      color: var(--text-muted);
+      opacity: 0.7;
     }
     
     /* Mobile */
     @media (max-width: 768px) {
       .hero h1 {
-        font-size: 32px;
+        font-size: 36px;
       }
       
-      .stats,
-      .feature-grid,
-      .steps,
-      .wins-grid {
-        grid-template-columns: 1fr;
+      .hero p {
+        font-size: 17px;
       }
       
       .stats {
         grid-template-columns: repeat(2, 1fr);
       }
-    }
-    
-    /* Performance data will be injected here */
-    #live-stats {
-      display: none;
+      
+      .feature-grid,
+      .steps,
+      .faq-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .section-title {
+        font-size: 32px;
+      }
+      
+      .pricing-price {
+        font-size: 48px;
+      }
     }
   </style>
 </head>
 <body>
   <header>
-    <div class="container">
-      <div class="logo">Asymmetry<span>Scanner</span></div>
+    <div class="container header-inner">
+      <div class="logo">Asymmetric<span>Alpha</span></div>
+      <a href="#pricing" class="header-cta">Get Started</a>
     </div>
   </header>
   
   <section class="hero">
     <div class="container">
-      <h1>Find <span>Asymmetric</span> Trades<br>Before the Crowd</h1>
-      <p>AI-powered scanner finds high-probability setups with 2:1+ risk/reward ratios. Get real-time alerts via Telegram.</p>
-      <a href="https://t.me/+your-channel-link" class="cta-btn">Join Now — $49/mo</a>
-      <p class="cta-note">Cancel anytime. 7-day free trial.</p>
+      <div class="badge">📐 AI-Powered Scanner</div>
+      <h1>Find the <span class="gradient">Edge</span><br>Before the Crowd</h1>
+      <p>Algorithmic scanner finds asymmetric setups with 2:1+ risk/reward. Get actionable alerts with exact entry, stop, and target levels.</p>
+      <a href="#pricing" class="hero-cta">
+        Start Free Trial
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <p class="hero-note">7-day free trial • Cancel anytime</p>
     </div>
   </section>
   
@@ -392,151 +583,157 @@
         <div class="stat-label">Avg Loser</div>
       </div>
       <div class="stat-card">
-        <div class="stat-value" id="signals-count">--</div>
-        <div class="stat-label">Signals This Month</div>
-      </div>
-    </div>
-  </section>
-  
-  <section class="features">
-    <div class="container">
-      <h2>Three Strategies. One Scanner.</h2>
-      <div class="feature-grid">
-        <div class="feature-card">
-          <div class="feature-icon">📉</div>
-          <h3>Oversold Bounce</h3>
-          <p>Catches mean reversion plays when quality names get hammered. RSI, support levels, and volume confirm entries.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🚀</div>
-          <h3>Momentum Breakout</h3>
-          <p>Identifies breakouts from consolidation with volume confirmation. Rides trends early.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">💥</div>
-          <h3>Squeeze Detector</h3>
-          <p>Finds high short interest stocks primed for short squeezes. Catches explosive moves.</p>
-        </div>
+        <div class="stat-value" id="profit-factor">--</div>
+        <div class="stat-label">Profit Factor</div>
       </div>
     </div>
   </section>
   
   <section class="how-it-works">
     <div class="container">
-      <h2>How It Works</h2>
+      <div class="section-label">How It Works</div>
+      <h2 class="section-title">Three Steps to Better Trades</h2>
       <div class="steps">
         <div class="step">
           <div class="step-num">1</div>
-          <h3>Join Telegram</h3>
-          <p>Subscribe and get instant access to our private Telegram channel.</p>
+          <h3>Join the Channel</h3>
+          <p>Subscribe and get instant access to our private Telegram. Takes 30 seconds.</p>
         </div>
         <div class="step">
           <div class="step-num">2</div>
-          <h3>Get Alerts</h3>
-          <p>Receive 4 scans daily with entry, stop, and target levels.</p>
+          <h3>Receive Alerts</h3>
+          <p>Get 4 daily scans with precise entry, stop-loss, and profit target levels.</p>
         </div>
         <div class="step">
           <div class="step-num">3</div>
-          <h3>Execute</h3>
-          <p>Follow the levels. Manage risk. Stack wins.</p>
+          <h3>Execute & Profit</h3>
+          <p>Follow the levels. Manage your risk. Stack asymmetric wins.</p>
         </div>
       </div>
     </div>
   </section>
   
-  <section class="recent-wins">
+  <section class="features">
     <div class="container">
-      <h2>Recent Wins</h2>
-      <div class="wins-grid" id="recent-wins">
-        <div class="win-card">
-          <div class="win-symbol">SOFI</div>
-          <div class="win-pnl">+32%</div>
-          <div class="win-date">Sample</div>
+      <div class="section-label">Three Strategies</div>
+      <h2 class="section-title">One Unified Scanner</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📉</div>
+          <h3>Oversold Bounce</h3>
+          <p>Mean reversion plays when quality names get oversold. RSI, support levels, and volume confirm entries at inflection points.</p>
         </div>
-        <div class="win-card">
-          <div class="win-symbol">IONQ</div>
-          <div class="win-pnl">+28%</div>
-          <div class="win-date">Sample</div>
+        <div class="feature-card">
+          <div class="feature-icon">🚀</div>
+          <h3>Momentum Breakout</h3>
+          <p>Catches breakouts from consolidation with volume confirmation. Ride trends early before they become obvious.</p>
         </div>
-        <div class="win-card">
-          <div class="win-symbol">LUNR</div>
-          <div class="win-pnl">+45%</div>
-          <div class="win-date">Sample</div>
-        </div>
-        <div class="win-card">
-          <div class="win-symbol">AMD</div>
-          <div class="win-pnl">+18%</div>
-          <div class="win-date">Sample</div>
-        </div>
-        <div class="win-card">
-          <div class="win-symbol">TSLA</div>
-          <div class="win-pnl">+24%</div>
-          <div class="win-date">Sample</div>
+        <div class="feature-card">
+          <div class="feature-icon">💥</div>
+          <h3>Squeeze Detector</h3>
+          <p>Finds high short interest stocks primed for short squeezes. Catches explosive moves with asymmetric upside.</p>
         </div>
       </div>
     </div>
   </section>
   
-  <section class="pricing">
+  <section class="sample-section">
     <div class="container">
-      <h2>Simple Pricing</h2>
+      <div class="section-label">Sample Alert</div>
+      <h2 class="section-title">What You'll Receive</h2>
+      <div class="sample-alert">
+        <div class="header">🎯 ASYMMETRIC ALPHA</div>
+        <div class="symbol">1. SOFI 📉</div>
+        <div>🟢 Score: 8.2 │ R/R: 3:1</div>
+        <div class="levels">
+          <div>Entry: <span class="green">$12.45</span> → Target: <span class="green">$14.20</span></div>
+          <div>Stop: $11.60</div>
+        </div>
+        <div style="margin-top: 16px; color: var(--text-muted); font-size: 12px;">
+          + 4 more setups...
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <section class="pricing" id="pricing">
+    <div class="container">
+      <div class="section-label">Pricing</div>
+      <h2 class="section-title">Simple, Transparent Pricing</h2>
       <div class="pricing-card">
-        <div class="pricing-name">Pro Alerts</div>
+        <div class="pricing-popular">POPULAR</div>
+        <div class="pricing-name">Pro Signals</div>
+        <div class="pricing-desc">Everything you need to find edge</div>
         <div class="pricing-price">$49<span>/mo</span></div>
         <ul class="pricing-features">
-          <li>4 daily scans (market hours)</li>
+          <li>4 daily market scans</li>
           <li>Pre-close gap play alerts</li>
-          <li>Entry, stop, target levels</li>
-          <li>Oversold, Momentum & Squeeze setups</li>
-          <li>Telegram alerts (instant)</li>
-          <li>Performance tracking</li>
+          <li>Entry, stop & target levels</li>
+          <li>3 strategies (Oversold, Momentum, Squeeze)</li>
+          <li>Instant Telegram delivery</li>
+          <li>Full performance transparency</li>
         </ul>
-        <a href="https://t.me/+your-channel-link" class="cta-btn" style="width: 100%;">Start 7-Day Free Trial</a>
+        <a href="https://t.me/+YOUR_CHANNEL_LINK" class="pricing-cta">Start 7-Day Free Trial</a>
+      </div>
+    </div>
+  </section>
+  
+  <section class="faq">
+    <div class="container">
+      <div class="section-label">FAQ</div>
+      <h2 class="section-title">Common Questions</h2>
+      <div class="faq-grid">
+        <div class="faq-item">
+          <h3>What markets do you scan?</h3>
+          <p>US equities across growth sectors: tech, fintech, space, nuclear, quantum, and crypto-adjacent names. We focus on liquid, optionable stocks.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What times do scans run?</h3>
+          <p>Four times daily: Market open (6:30 AM PT), Prime window (7:30 AM PT), Pre-power hour (11 AM PT), and Pre-close (12:55 PM PT).</p>
+        </div>
+        <div class="faq-item">
+          <h3>Do you trade options?</h3>
+          <p>Alerts include underlying levels. Options plays are supported but the system works for shares too. Risk management is key.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How do I cancel?</h3>
+          <p>Cancel anytime from your account. No questions, no hassle. You keep access until the end of your billing period.</p>
+        </div>
       </div>
     </div>
   </section>
   
   <footer>
     <div class="container">
+      <div class="footer-logo">Asymmetric<span>Alpha</span></div>
       <p>Built by traders. Powered by data.</p>
-      <p style="margin-top: 16px;">
-        <a href="#">Terms</a> • <a href="#">Privacy</a> • <a href="#">Contact</a>
+      <p style="margin-top: 24px;">
+        <a href="#">Terms</a> &nbsp;•&nbsp; <a href="#">Privacy</a> &nbsp;•&nbsp; <a href="#">Contact</a>
       </p>
-      <p style="margin-top: 24px; font-size: 12px;">
-        Trading involves risk. Past performance does not guarantee future results.
+      <p class="disclaimer">
+        Trading involves substantial risk of loss. Past performance does not guarantee future results.<br>
+        This is not financial advice. Always do your own research.
       </p>
     </div>
   </footer>
   
   <script>
-    // Load live performance data
     async function loadStats() {
       try {
         const res = await fetch('./data/public-performance.json');
         if (res.ok) {
           const data = await res.json();
-          document.getElementById('win-rate').textContent = data.allTime.winRate + '%';
-          document.getElementById('avg-win').textContent = '+' + data.allTime.avgWin + '%';
-          document.getElementById('avg-loss').textContent = '-' + data.allTime.avgLoss + '%';
-          document.getElementById('signals-count').textContent = data.last7Days.signals;
-          
-          // Update recent wins if available
-          if (data.recentWins && data.recentWins.length > 0) {
-            const container = document.getElementById('recent-wins');
-            container.innerHTML = data.recentWins.map(w => `
-              <div class="win-card">
-                <div class="win-symbol">${w.symbol}</div>
-                <div class="win-pnl">${w.pnl}</div>
-                <div class="win-date">${w.date}</div>
-              </div>
-            `).join('');
+          if (data.allTime && data.allTime.winRate !== '--') {
+            document.getElementById('win-rate').textContent = data.allTime.winRate + '%';
+            document.getElementById('avg-win').textContent = '+' + data.allTime.avgWin + '%';
+            document.getElementById('avg-loss').textContent = '-' + data.allTime.avgLoss + '%';
+            document.getElementById('profit-factor').textContent = data.allTime.profitFactor + 'x';
           }
         }
       } catch (e) {
-        console.log('Stats not yet available');
+        console.log('Stats loading...');
       }
     }
-    
     loadStats();
   </script>
 </body>
